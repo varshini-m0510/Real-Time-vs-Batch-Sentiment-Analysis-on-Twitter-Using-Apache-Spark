@@ -1,0 +1,30 @@
+to run streaming mode:
+sudo mkdir -p /tmp/zookeeper/version-2
+sudo chown -R $USER:$USER /tmp/zookeeper
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+bin/kafka-server-start.sh config/server.properties
+
+bin/kafka-topics.sh --create   --topic twitter-topic1   --bootstrap-server localhost:9092   --partitions 1   --replication-factor 1
+bin/kafka-topics.sh --create --topic twitter-topic2 --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+bin/kafka-topics.sh --create --topic twitter-topic3 --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+bin/kafka-topics.sh --create --topic raw_tweets --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+bin/kafka-topics.sh --create --topic filtered_tweets --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+bin/kafka-topics.sh --create --topic scored_tweets --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+python3 twitter_producer.py
+python3 twitter_streamer.py
+
+/home/osboxes/spark/bin/spark-submit \
+  --jars /home/osboxes/Downloads/DBT_PROJECT_cmplt/mysql-connector-j-9.2.0/mysql-connector-j-9.2.0.jar \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+  /home/osboxes/Downloads/DBT_PROJECT_cmplt/spark_streaming_sentiment.py
+  
+python3 evaluate_streaming.py
+
+/home/osboxes/spark/bin/spark-submit \
+  --jars /home/osboxes/Downloads/DBT_PROJECT_cmplt/mysql-connector-j-9.2.0/mysql-connector-j-9.2.0.jar \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+  /home/osboxes/Downloads/DBT_PROJECT_cmplt/twitter_batch.py
+
+python3 compare_results.py
+
