@@ -21,12 +21,21 @@ This project demonstrates a complete sentiment analysis pipeline on Twitter data
 
 ## 📂 Project Structure
 ├── twitter_streamer.py # Real-time tweet streaming (Kafka producer)
+
 ├── twitter_producer.py # Alternate tweet producer
+
 ├── twitter_batch.py # Batch tweet collection
+
 ├── spark_streaming_sentiment.py # Spark streaming sentiment analysis
+
 ├── batch_sentiment_analysis.py # Batch mode sentiment analysis
+
 ├── sentiment_analysis.py # Core sentiment logic
+
 ├── evaluate_streaming.py # Streaming evaluation
+
 ├── compare_results.py # Batch vs streaming results
+
 ├── mysql-connector-j-* # MySQL JDBC connectors
+
 ├── commands.txt # Useful CLI commands
